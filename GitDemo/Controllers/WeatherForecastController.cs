@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace GitDemo.Controllers
 {
@@ -19,15 +20,30 @@ namespace GitDemo.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public string Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            string repositoryUrl = "https://gitee.com/vuejs/core.git";
+            string localPath = Path.Combine(Directory.GetCurrentDirectory(), "repo");
+            string username = Environment.GetEnvironmentVariable("GitHubUsername");
+            string password = Environment.GetEnvironmentVariable("GitHubPassword");
+
+            // ¿ËÂ¡²Ö¿â
+            ExecuteCmdCommand($"dir");
+
+            return "Ö´ÐÐÍê±Ï";
+        }
+
+        private static void ExecuteCmdCommand(string command)
+        {
+            var process = new Process
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = "git",
+                    Arguments = "clone https://gitee.com/vuejs/core.git ./core",
+                }
+            };
+            process.Start();
         }
     }
 }
